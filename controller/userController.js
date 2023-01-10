@@ -1,5 +1,7 @@
-const userServie = require('../service/userService')
 const path = require('path')
+const jsonWebToken = require('jsonwebtoken')
+const userServie = require('../service/userService')
+const config = require('../config/config')
 
 class UserController {
     constructor() {
@@ -9,15 +11,29 @@ class UserController {
 
     register(req, res) {
         console.log(req.body)
+        const {userId, userName} = req.body
+        const secretKey = config.secretKey
+        const token = jsonWebToken.sign(
+            {userId: userId}, 
+            secretKey, 
+            {expiresIn: '60d',algorithm:"HS256"}
+        )
         this.count++;
         res.send({
             status: 1,
-            message: `注册用户信息${this.count}`
+            message: `注册用户信息${this.count}`,
+            data: {
+                token: token,
+                userInfo: {
+                    userName: userName
+                }
+            }
         })
     }
 
     async login(req, res) {
-        const { userId } = req.body;
+        const {userId} = req.auth;
+        const {userName} = req.body;
         try {
             console.log(`userId=${userId}`);
             if (!userId) {
@@ -36,7 +52,11 @@ class UserController {
             res.send({
                 status: 1,
                 message: '登录成功',
-                data: results
+                data: {
+                    results: results,
+                    userId,
+                    userName
+                }
             })
         } catch (err) {
             res.send({
