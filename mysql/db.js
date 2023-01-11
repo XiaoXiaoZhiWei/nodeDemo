@@ -31,13 +31,16 @@ const createDB = function () {
 /// 创建用户表：users
 const createUserTableSql = `create table if not exists users (
     id int not null primary key auto_increment comment '用户ID',
-    nick_name varchar(100) not null,
-    avatar_url varchar(255),
-    gender int not null default 0,
-    open_id varchar(255),
-    session_key varchar(255),
-    created_at datetime,
-    updated_at datetime
+    userName varchar(100) not null comment '用户名',
+    password varchar(100) not null comment '用户密码',
+    avatarUrl varchar(255) comment '用户图像',
+    email varchar(255) comment '邮箱',
+    phone varchar(255) comment '手机号',
+    gender int not null default 0 comment '用户性别',
+    openId varchar(255),
+    sessionKey varchar(255),
+    createdTime datetime not null,
+    updatedTime datetime
 )`
 const ceateUserTable = function() {
     return new Promise((resolve, reject) => {

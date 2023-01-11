@@ -1,10 +1,12 @@
 const express = require('express')
+const expressJoi = require('@escook/express-joi')
 const userHandler = require('../controller/userController')
 const upload = require('../middleware/upload')
+const userSchma = require('../models/user')
 
 const router = express.Router()
 // 注册
-router.post('/register', userHandler.register)
+router.post('/register', expressJoi(userSchma),userHandler.register)
 // 登录
 router.post('/login', userHandler.login)
 // 修改用户信息

@@ -11,10 +11,10 @@ class UserController {
 
     register(req, res) {
         console.log(req.body)
-        const {userId, userName} = req.body
+        const {userName} = req.body
         const secretKey = config.secretKey
         const token = jsonWebToken.sign(
-            {userId: userId}, 
+            {userName: userName}, 
             secretKey, 
             {expiresIn: '60d',algorithm:"HS256"}
         )
