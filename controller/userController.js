@@ -1,5 +1,6 @@
 const path = require('path')
 const jsonWebToken = require('jsonwebtoken')
+const bcrypt = require('bcryptjs')
 const userServie = require('../service/userService')
 const config = require('../config/config')
 
@@ -20,7 +21,7 @@ class UserController {
                     message: `用户名被占用，请更换其他用户名！`,
                 })
             }
-
+            const passwordHash = bcrypt.hashSync(password, 10)
             const secretKey = config.secretKey
             const token = jsonWebToken.sign(
                 { userName: userName },
