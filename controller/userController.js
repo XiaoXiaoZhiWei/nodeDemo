@@ -9,31 +9,48 @@ class UserController {
         this.register = this.register.bind(this);
     }
 
-    register(req, res) {
+    async register(req, res) {
         console.log(req.body)
-        const {userName} = req.body
-        const secretKey = config.secretKey
-        const token = jsonWebToken.sign(
-            {userName: userName}, 
-            secretKey, 
-            {expiresIn: '60d',algorithm:"HS256"}
-        )
-        this.count++;
-        res.send({
-            status: 1,
-            message: `注册用户信息${this.count}`,
-            data: {
-                token: token,
-                userInfo: {
-                    userName: userName
-                }
+        const {userName, password} = req.body
+        try {
+            const results = await userServie.isExistUser(userName)
+            if (results.length > 1) {
+                return res.send({
+                    status: 0,
+                    message: `用户名被占用，请更换其他用户名！`,
+                })
             }
-        })
+
+            const secretKey = config.secretKey
+            const token = jsonWebToken.sign(
+                { userName: userName },
+                secretKey,
+                { expiresIn: '60d', algorithm: "HS256" }
+            )
+            this.count++;
+            res.send({
+                status: 1,
+                message: `注册用户信息${this.count}`,
+                data: {
+                    token: token,
+                    userInfo: {
+                        userName: userName
+                    }
+                }
+            })
+        } catch (error) {
+            res.send({
+                status: 0,
+                message: error.message,
+            })
+        }
+
+
     }
 
     async login(req, res) {
-        const {userId} = req.auth;
-        const {userName} = req.body;
+        const { userId } = req.auth;
+        const { userName } = req.body;
         try {
             console.log(`userId=${userId}`);
             if (!userId) {

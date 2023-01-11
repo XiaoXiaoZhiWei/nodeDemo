@@ -10,7 +10,7 @@ const joi = require('joi')
  */
 const UserSchma = {
     userName: joi.string().required().min(1).max(10),
-    password: joi.string().required().min(6).max(10),
+    password: joi.string().required().min(6).max(10).pattern(/^[\S]{6,12}$/),
     avatarUrl: joi.string(),
     email: joi.string().email(),
     phone: joi.string().pattern(new RegExp('^[1][3,5,7,8][0-9]\\d{8}$')),

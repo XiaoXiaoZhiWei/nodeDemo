@@ -13,9 +13,15 @@ class UserService extends BaseService {
     }
 
     // 查找用户
-    findUser(studentId) {
+    findUser(userId) {
         const sqlStr = 'SELECT * FROM users where id = ?'
-        return this.queryDB(sqlStr,[studentId])
+        return this.queryDB(sqlStr,[userId])
+    }
+
+    // 判断用户名是否被占用
+    async isExistUser(userName) {
+        const sqlStr = 'SELECT * FROM users where userName = ?'
+        return this.queryDB(sqlStr,[userId])
     }
 }
 
